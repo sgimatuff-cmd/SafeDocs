@@ -1,13 +1,29 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FicheiroController;
+use App\Http\Controllers\ProfileController; // Importado para a foto de perfil
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\GrupoController;
 use App\Http\Controllers\Admin\LogController;
+
+# ======================================================================
+# ROTA TEMPORÁRIA: FORÇAR MIGRAÇÕES NO RENDER PARA O SUPABASE
+# ======================================================================
+Route::get('/correr-migracoes-supabase', function () {
+    try {
+        Artisan::call('migrate', ['--force' => true]);
+        return '<h1>Sucesso!</h1><p>As tabelas foram injetadas e criadas no teu Supabase.</p>';
+    } catch (\Exception $e) {
+        return '<h1>Erro ao migrar:</h1><pre>' . $e->getMessage() . '</pre>';
+    }
+});
+# ======================================================================
 
 Route::get('/', function () {
     return view('welcome');
@@ -29,6 +45,9 @@ Route::post('/sair', [AuthenticatedSessionController::class, 'destroy'])
 Route::middleware('auth')->group(function () {
 
     Route::get('/painel', [DashboardController::class, 'index'])->name('dashboard');
+    
+    // Rota que processa o upload do avatar enviado pelo dashboard
+    Route::patch('/perfil', [ProfileController::class, 'update'])->name('profile.update');
 
     Route::prefix('ficheiros')->name('ficheiros.')->group(function () {
         Route::get('/',                       [FicheiroController::class, 'index'])->name('index');
