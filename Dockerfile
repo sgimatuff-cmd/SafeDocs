@@ -1,6 +1,5 @@
 FROM php:8.2-cli
 
-# Instalar dependências do sistema
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -10,29 +9,29 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip
 
-# Instalar extensões PHP necessárias para Laravel
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
-# Instalar Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Definir diretório de trabalho
 WORKDIR /var/www
 
-# Copiar projeto
 COPY . .
 
-# Instalar dependências Laravel
+# criar pastas necessárias
+RUN mkdir -p storage/framework/cache \
+ && mkdir -p storage/framework/sessions \
+ && mkdir -p storage/framework/views \
+ && mkdir -p bootstrap/cache
+
+# instalar dependências PRIMEIRO
 RUN composer install --no-dev --optimize-autoloader
 
-# Permissões necessárias
+# permissões
 RUN chmod -R 777 storage bootstrap/cache
 
-# Gerar chave da aplicação (vai falhar se .env não estiver no deploy, mas Render resolve depois)
-RUN php artisan config:clear
+# só limpar cache DEPOIS de tudo existir
+RUN php artisan optimize:clear || true
 
-# Expor porta do Render
 EXPOSE 10000
 
-# Comando de arranque
 CMD php artisan serve --host=0.0.0.0 --port=10000
