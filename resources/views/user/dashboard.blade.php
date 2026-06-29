@@ -12,6 +12,38 @@
     </a>
 </div>
 
+<div class="card mb-4">
+    <div class="card-header">A minha foto de perfil</div>
+    <div class="card-body">
+        <div class="d-flex align-items-center gap-3">
+            <div class="me-3">
+                @if(auth()->user()->avatar)
+                    <img src="https://ffzxpmwmoadtsyilnvoj.supabase.co/storage/v1/object/public/laravel-media/{{ auth()->user()->avatar }}" alt="Avatar" class="rounded-circle" style="width: 60px; height: 60px; object-fit: cover;">
+                @else
+                    <div class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 60px; height: 60px; font-size: 1.5rem;">
+                        {{ strtoupper(substr(auth()->user()->nome, 0, 1)) }}
+                    </div>
+                @endif
+            </div>
+
+            <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data" class="d-flex align-items-center gap-2 flex-grow-1">
+                @csrf
+                @method('PATCH')
+                
+                <div class="flex-grow-1">
+                    <input type="file" name="avatar" class="form-control form-control-sm @error('avatar') is-invalid @enderror" required>
+                    @error('avatar')
+                        <div class="invalid-feedback small">{{ $message }}</div>
+                    @enderror
+                </div>
+                
+                <button type="submit" class="btn btn-success btn-sm">
+                    Atualizar Foto
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
 <div class="card">
     <div class="card-header">Transferências recentes</div>
     <div class="card-body p-0">

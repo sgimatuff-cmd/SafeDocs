@@ -24,15 +24,30 @@ class ProfileController extends Controller
     /**
      * Update the user's profile information.
      */
+    /**
+     * Update the user's profile information.
+     */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
+        $user->fill($request->validated());
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
         }
 
-        $request->user()->save();
+        // === ADICIONA ESTE BLOCO AQUI PARA A FOTO ===
+        if ($request->hasFile('avatar')) {
+            // 1. Envia o ficheiro para o Supabase Storage (na pasta 'avatars' dentro do teu bucket s3)
+            $path = $request->file('avatar')->store('avatars', 's3');
+            
+            // 2. Guarda o caminho da foto na coluna da base de dados do utilizador
+            // (Garante que tens a coluna 'avatar' ou 'avatar_path' na tua tabela de users)
+            $user->avatar = $path; 
+        }
+        // ============================================
+
+        $user->save();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
