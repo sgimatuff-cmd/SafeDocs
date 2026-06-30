@@ -25,10 +25,10 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        // Autenticar com os campos em português
+        // Alterado para 'palavra_passe' para corresponder à sua coluna na base de dados
         if (!Auth::attempt([
             'email'         => $this->email,
-            'password'      => $this->palavra_passe, // Laravel usa 'password' internamente
+            'palavra_passe' => $this->palavra_passe, 
         ], $this->boolean('lembrar'))) {
             RateLimiter::hit($this->throttleKey());
             throw ValidationException::withMessages([
