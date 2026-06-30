@@ -31,7 +31,7 @@ class CargoSeeder extends Seeder
                 'nome'      => 'Administrador',
                 'slug'      => 'admin',
                 'nivel'     => 4,
-                'descricao' => 'Acesso total — grupos, simulação de perfil e gestão completa.',
+                'descricao' => ' Acesso total.',
             ],
         ];
 
@@ -39,6 +39,6 @@ class CargoSeeder extends Seeder
             Cargo::firstOrCreate(['slug' => $cargo['slug']], $cargo);
         }
 
-        echo "✓ Cargos criados: Utilizador, Operador, Moderador, Administrador\n";
+        echo " Cargos criados: Utilizador, Operador, Moderador, Administrador\n";
     }
 }

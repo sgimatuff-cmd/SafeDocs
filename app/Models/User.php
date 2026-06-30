@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -9,19 +10,25 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+    // Define a tabela correta no Supabase
     protected $table = 'utilizadores';
 
+    // Campos preenchíveis
     protected $fillable = ['nome', 'email', 'palavra_passe', 'e_administrador', 'google_id'];
 
+    // Esconde a password e o token de sessão por segurança
     protected $hidden = ['palavra_passe', 'remember_token'];
 
+    // Define os tipos de dados para as colunas
     protected function casts(): array
     {
         return [
-            'palavra_passe'   => 'hashed',
+            // Removido 'palavra_passe' => 'hashed' para evitar conflitos com o login
             'e_administrador' => 'boolean',
         ];
     }
+
+    // --- Relações ---
 
     public function grupos()
     {
@@ -37,6 +44,8 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Cargo::class, 'cargo_utilizador', 'utilizador_id', 'cargo_id');
     }
+
+    // --- Métodos de Autorização ---
 
     public function temCargo(string $slug): bool
     {
@@ -78,6 +87,12 @@ class User extends Authenticatable
         return $this->eAdmin() || $this->temCargo('moderador');
     }
 
+    // --- Método para o Auth do Laravel usar a coluna personalizada ---
+
+    /**
+     * Get the password for the user.
+     * Substitui o comportamento padrão para usar 'palavra_passe'
+     */
     public function getAuthPassword()
     {
         return $this->palavra_passe;
