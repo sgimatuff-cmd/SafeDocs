@@ -12,32 +12,6 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\GrupoController;
 use App\Http\Controllers\Admin\LogController;
 
-# ======================================================================
-# ROTAS DE MANUTENÇÃO NO RENDER (Remover após uso!)
-# ======================================================================
-
-Route::get('/correr-migracoes-supabase', function () {
-    try {
-        Artisan::call('migrate', ['--force' => true]);
-        return '<h1>Sucesso!</h1><p>Migrações executadas.</p>';
-    } catch (\Exception $e) {
-        return '<h1>Erro:</h1><pre>' . $e->getMessage() . '</pre>';
-    }
-});
-
-Route::get('/correr-seed-supabase', function () {
-    try {
-        // Roda o DatabaseSeeder completo. 
-        // Se quiseres um específico, usa: Artisan::call('db:seed', ['--class' => 'NomeDoSeeder', '--force' => true]);
-        Artisan::call('db:seed', ['--force' => true]);
-        return '<h1>Sucesso!</h1><p>Seeder executado com sucesso no Supabase.</p>';
-    } catch (\Exception $e) {
-        return '<h1>Erro no Seeder:</h1><pre>' . $e->getMessage() . '</pre>';
-    }
-});
-
-# ======================================================================
-
 Route::get('/', function () {
     return view('welcome');
 })->name('inicio');
