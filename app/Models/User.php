@@ -23,8 +23,10 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            // Removido 'palavra_passe' => 'hashed' para evitar conflitos com o login
             'e_administrador' => 'boolean',
+            'email_verified_at' => 'datetime',
+            // Importante: 'hashed' informa o Laravel que ao guardar no futuro, deve encriptar
+            'palavra_passe' => 'hashed', 
         ];
     }
 
@@ -91,9 +93,9 @@ class User extends Authenticatable
 
     /**
      * Get the password for the user.
-     * Substitui o comportamento padrão para usar 'palavra_passe'
+     * O Laravel chama este método internamente durante o Auth::attempt()
      */
-    public function getAuthPassword()
+    public function getAuthPassword(): string
     {
         return $this->palavra_passe;
     }

@@ -17,7 +17,7 @@ class LoginRequest extends FormRequest
     {
         return [
             'email'         => ['required', 'string', 'email'],
-            'palavra_passe' => ['required', 'string'],
+            'palavra_passe' => ['required', 'string'], // Nome do campo no seu HTML
         ];
     }
 
@@ -25,12 +25,15 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        // Alterado para 'palavra_passe' para corresponder à sua coluna na base de dados
+        // O Laravel espera 'password' como chave para verificar a hash.
+        // Passamos 'palavra_passe' (o que vem do form) para a chave 'password'.
         if (!Auth::attempt([
-            'email'         => $this->email,
-            'palavra_passe' => $this->palavra_passe, 
+            'email'    => $this->email,
+            'password' => $this->palavra_passe, 
         ], $this->boolean('lembrar'))) {
+            
             RateLimiter::hit($this->throttleKey());
+
             throw ValidationException::withMessages([
                 'email' => 'Email ou palavra-passe incorretos.',
             ]);
@@ -41,7 +44,7 @@ class LoginRequest extends FormRequest
 
     public function ensureIsNotRateLimited(): void
     {
-        if (!RateLimiter::tooManyAttempts($this->throttleKey(), 30)) return;
+        if (!RateLimiter::tooManyAttempts($this->throttleKey(), 5)) return; // Sugiro baixar para 5 tentativas
 
         event(new Lockout($this));
         $seconds = RateLimiter::availableIn($this->throttleKey());
