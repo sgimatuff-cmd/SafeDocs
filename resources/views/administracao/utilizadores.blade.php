@@ -57,17 +57,15 @@
                             </div>
                             @php $cargosDisponiveis = $cargos->filter(fn($c) => !$u->cargos->contains($c->id) && $c->slug !== 'admin'); @endphp
                             @if($u->id !== auth()->id() && $cargosDisponiveis->isNotEmpty())
-                            <form action="{{ route('admin.utilizadores.cargos.adicionar', $u) }}"
-                                  method="POST" class="d-flex gap-1">
+                            <form action="{{ route('admin.utilizadores.cargos.adicionar', $u) }}" method="POST">
                                 @csrf
-                                <select name="cargo_id" class="form-select form-select-sm" style="width:140px">
+                                <select name="cargo_id" class="form-select form-select-sm" style="width:110px"
+                                        onchange="this.form.submit()">
+                                    <option selected disabled>+ cargo</option>
                                     @foreach($cargosDisponiveis as $c)
                                         <option value="{{ $c->id }}">{{ $c->nome }}</option>
                                     @endforeach
                                 </select>
-                                <button type="submit" class="btn btn-outline-info btn-sm" title="Atribuir cargo">
-                                    <i class="bi bi-shield-plus"></i>
-                                </button>
                             </form>
                             @endif
                         </td>
@@ -94,33 +92,28 @@
                         </td>
                         <td class="small text-muted">{{ $u->created_at->format('d/m/Y') }}</td>
                         <td class="text-end">
-                            <div class="d-flex gap-1 justify-content-end align-items-start flex-column flex-md-row">
+                            <div class="d-flex gap-1 justify-content-end align-items-center flex-wrap">
 
                                 @if($u->id !== auth()->id())
-                                <form action="{{ route('admin.utilizadores.grupo.adicionar', $u) }}"
-                                      method="POST" class="d-flex gap-1">
+                                <form action="{{ route('admin.utilizadores.grupo.adicionar', $u) }}" method="POST">
                                     @csrf
-                                    <select name="grupo_id" class="form-select form-select-sm" style="width:130px">
+                                    <select name="grupo_id" class="form-select form-select-sm" style="width:110px"
+                                            onchange="this.form.submit()">
+                                        <option selected disabled>+ grupo</option>
                                         @foreach(\App\Models\Grupo::all() as $g)
                                             <option value="{{ $g->id }}">{{ $g->nome }}</option>
                                         @endforeach
                                     </select>
-                                    <button type="submit" class="btn btn-outline-primary btn-sm" title="Adicionar ao grupo">
-                                        <i class="bi bi-plus"></i>
-                                    </button>
                                 </form>
                                 @endif
 
                                 @if(!$u->e_administrador)
-                                <form action="{{ route('admin.utilizadores.promover', $u) }}" method="POST"
-                                      class="d-flex gap-1">
+                                <form id="promover-form-{{ $u->id }}"
+                                      action="{{ route('admin.utilizadores.promover', $u) }}" method="POST">
                                     @csrf
-                                    <input type="password" name="password_confirmacao"
-                                           class="form-control form-control-sm"
-                                           placeholder="Tua password..." style="width:120px" required>
-                                    <button type="submit" class="btn btn-outline-success btn-sm"
-                                            title="Promover a Admin"
-                                            onclick="return confirm('Promover {{ $u->nome }} a administrador?')">
+                                    <input type="hidden" name="password_confirmacao" id="promover-pass-{{ $u->id }}">
+                                    <button type="button" class="btn btn-outline-success btn-sm" title="Promover a Admin"
+                                            onclick="var p = prompt('Introduz a tua password para promover {{ $u->nome }} a administrador:'); if (p) { document.getElementById('promover-pass-{{ $u->id }}').value = p; document.getElementById('promover-form-{{ $u->id }}').submit(); }">
                                         <i class="bi bi-shield-check"></i>
                                     </button>
                                 </form>
