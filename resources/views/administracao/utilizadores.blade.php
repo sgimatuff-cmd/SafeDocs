@@ -55,7 +55,7 @@
                                     <span class="text-muted small">Sem cargos</span>
                                 @endforelse
                             </div>
-                            @php $cargosDisponiveis = $cargos->filter(fn($c) => !$u->cargos->contains($c->id)); @endphp
+                            @php $cargosDisponiveis = $cargos->filter(fn($c) => !$u->cargos->contains($c->id) && $c->slug !== 'admin'); @endphp
                             @if($u->id !== auth()->id() && $cargosDisponiveis->isNotEmpty())
                             <form action="{{ route('admin.utilizadores.cargos.adicionar', $u) }}"
                                   method="POST" class="d-flex gap-1">
@@ -107,17 +107,6 @@
                                     </select>
                                     <button type="submit" class="btn btn-outline-primary btn-sm" title="Adicionar ao grupo">
                                         <i class="bi bi-plus"></i>
-                                    </button>
-                                </form>
-                                @endif
-
-                                @if($u->id !== auth()->id() && !$u->temCargo('operador') && !$u->e_administrador)
-                                <form action="{{ route('admin.utilizadores.promover-operador', $u) }}" method="POST">
-                                    @csrf
-                                    <button type="submit" class="btn btn-outline-info btn-sm"
-                                            title="Promover a Operador"
-                                            onclick="return confirm('Promover {{ $u->nome }} a operador?')">
-                                        <i class="bi bi-person-gear"></i>
                                     </button>
                                 </form>
                                 @endif
