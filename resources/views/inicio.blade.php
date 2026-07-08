@@ -52,22 +52,28 @@
         <div class="container">
             <div class="row g-4">
                 <div class="col-md-4">
-                    <p class="fw-semibold mb-1">Acesso por grupo</p>
-                    <p class="text-muted mb-0" style="font-size:.88rem;line-height:1.7">Cada utilizador só vê os ficheiros dos grupos a que pertence.</p>
+                    <div class="feature-card">
+                        <p class="fw-semibold mb-1">Acesso por grupo</p>
+                        <p class="text-muted mb-0" style="font-size:.88rem;line-height:1.7">Cada utilizador só vê os ficheiros dos grupos a que pertence.</p>
+                    </div>
                 </div>
                 <div class="col-md-4">
-                    <p class="fw-semibold mb-1">Registo de auditoria</p>
-                    <p class="text-muted mb-0" style="font-size:.88rem;line-height:1.7">Uploads, downloads e alterações de permissões ficam registados.</p>
+                    <div class="feature-card">
+                        <p class="fw-semibold mb-1">Registo de auditoria</p>
+                        <p class="text-muted mb-0" style="font-size:.88rem;line-height:1.7">Uploads, downloads e alterações de permissões ficam registados.</p>
+                    </div>
                 </div>
                 <div class="col-md-4">
-                    <p class="fw-semibold mb-1">Permissões por cargo</p>
-                    <p class="text-muted mb-0" style="font-size:.88rem;line-height:1.7">Utilizador, operador e administrador têm níveis de acesso diferentes.</p>
+                    <div class="feature-card">
+                        <p class="fw-semibold mb-1">Permissões por cargo</p>
+                        <p class="text-muted mb-0" style="font-size:.88rem;line-height:1.7">Utilizador, operador e administrador têm níveis de acesso diferentes.</p>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <footer>
+    <footer class="mt-auto">
         <div class="container">
             SafeDocs &copy; {{ date('Y') }} - Braga, Portugal
         </div>
