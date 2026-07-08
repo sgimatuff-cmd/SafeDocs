@@ -59,9 +59,9 @@
                             @if($u->id !== auth()->id() && $cargosDisponiveis->isNotEmpty())
                             <form action="{{ route('admin.utilizadores.cargos.adicionar', $u) }}" method="POST">
                                 @csrf
-                                <select name="cargo_id" class="form-select form-select-sm" style="width:110px"
-                                        onchange="this.form.submit()">
-                                    <option selected disabled>+ cargo</option>
+                                <select name="cargo_id" class="form-select form-select-sm" style="width:140px"
+                                        onchange="if (confirm('Atribuir o cargo &quot;' + this.options[this.selectedIndex].text + '&quot; a {{ $u->nome }}?')) { this.form.submit(); } else { this.selectedIndex = 0; }">
+                                    <option selected disabled>Adicionar cargo</option>
                                     @foreach($cargosDisponiveis as $c)
                                         <option value="{{ $c->id }}">{{ $c->nome }}</option>
                                     @endforeach
@@ -97,9 +97,9 @@
                                 @if($u->id !== auth()->id())
                                 <form action="{{ route('admin.utilizadores.grupo.adicionar', $u) }}" method="POST">
                                     @csrf
-                                    <select name="grupo_id" class="form-select form-select-sm" style="width:110px"
-                                            onchange="this.form.submit()">
-                                        <option selected disabled>+ grupo</option>
+                                    <select name="grupo_id" class="form-select form-select-sm" style="width:140px"
+                                            onchange="if (confirm('Adicionar {{ $u->nome }} ao grupo &quot;' + this.options[this.selectedIndex].text + '&quot;?')) { this.form.submit(); } else { this.selectedIndex = 0; }">
+                                        <option selected disabled>Adicionar grupo</option>
                                         @foreach(\App\Models\Grupo::all() as $g)
                                             <option value="{{ $g->id }}">{{ $g->nome }}</option>
                                         @endforeach
